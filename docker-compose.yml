@@ -1,0 +1,9 @@
+version: '3'
+services:
+  hadoop:
+    image: gvacaliuc/hadoop-docker:latest
+    hostname: hadoop-master
+    #   attaches the directory docker-compose was launched from
+    volumes:
+      - .:/launchdir
+    command: /etc/bootstrap.sh -bash
