@@ -17,15 +17,15 @@ $ docker build -t gvacaliuc/hadoop-docker .
 
 ### pulling
 
-```bash
-$ docker pull gvacaliuc/hadoop-docker
-```
-
-### running
-
 Pulling from `:latest` should be fine as I'm not going to be updating this repo
 that often, but you can optionally specify `:2.7.4` as the image version if
 you'd like to be sure the image will work.
+
+```bash
+$ docker pull gvacaliuc/hadoop-docker:latest
+```
+
+### running
 
 ```bash
 $ docker run -it gvacaliuc/hadoop-docker:latest /etc/bootstrap.sh -bash
