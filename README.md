@@ -1,11 +1,87 @@
-# Apache Hadoop 2.7.1 Docker image
+# Apache Hadoop 2.7.4 Docker image
 
-[![DockerPulls](https://img.shields.io/docker/pulls/sequenceiq/hadoop-docker.svg)](https://registry.hub.docker.com/u/sequenceiq/hadoop-docker/)
-[![DockerStars](https://img.shields.io/docker/stars/sequenceiq/hadoop-docker.svg)](https://registry.hub.docker.com/u/sequenceiq/hadoop-docker/)
+Docker image for a pseudo-distributed Hadoop 2.7.4 installation with JDK 1.8u144.
 
+Forked from: [sequenceiq/hadoop-docker](https://github.com/sequenceiq/hadoop-docker),
+original README preserved below.
 
+Everything is up on docker hub at
+[gvacaliuc/hadoop-docker](https://hub.docker.com/r/gvacaliuc/hadoop-docker/).
+Pushes to master update this image.  
 
-_Note: this is the master branch - for a particular Hadoop version always check the related branch_
+### building
+
+```bash
+$ docker build -t gvacaliuc/hadoop-docker .
+```
+
+### pulling
+
+```bash
+$ docker pull gvacaliuc/hadoop-docker
+```
+
+### running
+
+Pulling from `:latest` should be fine as I'm not going to be updating this repo
+that often, but you can optionally specify `:2.7.4` as the image version if
+you'd like to be sure the image will work.
+
+```bash
+$ docker run -it gvacaliuc/hadoop-docker:latest /etc/bootstrap.sh -bash
+```
+
+Optionally provide a hostname:
+
+```bash
+$ docker run -h awesome-hostname -it gvacaliuc/hadoop-docker:latest /etc/bootstrap.sh -bash
+```
+
+#### what happens when I run the `/etc/bootstrap.sh` script?
+
+1. some hadoop environment variables get set
+2. the hostname of the docker image gets dumped into some hadoop config
+3. sshd (ssh daemon) gets started, listening on port `2212`
+4. hdfs gets started
+5. depending on the flag to `/etc/bootstrap`
+    * if `-d`, the script launches as a "daemon" and sits in an infinite while
+      loop
+    * if `-bash` the script lands you in a bash shell in the container
+
+### connecting to the running container
+
+If you launched the container as a daemon, i.e. `-d` flag to the bootstrap script,
+then you need a way to actually connect to the container.  If you named the 
+container when you launched it, you can launch a bash shell with
+
+```bash
+$ docker exec -it awesomeContainerName bash
+```
+
+If you didn't name it, just use `docker ps` to get the container name / id
+and use one of those.  If this is the last container you launched, you can
+also just use
+
+```bash
+$ docker exec -it $(docker ps -lq) bash
+```
+
+which gets the latest (`-l`) container id only (`-q`).
+
+### using docker compose
+
+If you have docker compose installed, you can use the included
+[docker-compose.yml](./docker-compose.yml) to get started.  It sets the
+hostname and mounts the directory it was launched from as `/launchdir` on the
+container.  Example usage:
+
+```
+$ docker-compose run hadoop
+```
+
+**BEGIN OLD README**
+
+--------------------------------------------------------------------------------
 
 A few weeks ago we released an Apache Hadoop 2.3 Docker image - this quickly become the most [popular](https://registry.hub.docker.com/search?q=hadoop&s=downloads) Hadoop image in the Docker [registry](https://registry.hub.docker.com/).
 
