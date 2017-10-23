@@ -27,6 +27,11 @@ SSH_PORT=2122
 
 $HADOOP_PREFIX/sbin/start-dfs.sh
 
+if ! $HADOOP_PREFIX/bin/hadoop fs -ls > /dev/null 2>&1 ; then
+    echo "Making /user/root/ on the hadoop filesystem..."
+    $HADOOP_PREFIX/bin/hadoop fs -mkdir -p /user/root
+fi
+
 #   crude approximation for daemon
 if [[ $1 == "-d" ]]; then
   while true; do sleep 1000; done
